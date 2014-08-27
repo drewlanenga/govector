@@ -3,7 +3,13 @@ package govector
 import (
 	"fmt"
 	"math"
+	"math/rand"
 	"sort"
+	"time"
+)
+
+const (
+	NA = math.SmallestNonzeroFloat64
 )
 
 type Vector []float64
@@ -41,6 +47,20 @@ func (x Vector) Sum() (float64, error) {
 		s += v
 	}
 	return s, nil
+}
+
+// Return the absolute values of the vector elements
+func (x Vector) Abs() (Vector, error) {
+	y, err := x.copy()
+	if err != nil {
+		return nil, err
+	}
+
+	for i, _ := range y {
+		y[i] = math.Abs(y[i])
+	}
+
+	return y, nil
 }
 
 // Return the cumulative sum of the vector
@@ -222,4 +242,41 @@ func (x Vector) Diff() (Vector, error) {
 	}
 
 	return d, nil
+}
+
+// Return a shuffled copy of the original input vector
+func (x Vector) Shuffle() (Vector, error) {
+	rand.Seed(time.Now().UnixNano())
+
+	perm := rand.Perm(len(x))
+
+	y := make(Vector, len(x))
+	for yi, permi := range perm {
+		y[yi] = x[permi]
+	}
+
+	return y, nil
+}
+
+// Return a vector of the ranked values of the input vector
+func (x Vector) Rank() (Vector, error) {
+	y, err := x.copy()
+	if err != nil {
+		return nil, err
+	}
+	sort.Sort(y)
+
+	// essentially equivalent to a minimum rank method
+	rank := 0
+	ranks := make(Vector, len(x))
+	for i, _ := range y {
+		for j, _ := range x {
+			if y[i] == x[j] {
+				ranks[j] = float64(rank)
+				rank++
+				break
+			}
+		}
+	}
+	return ranks, nil
 }

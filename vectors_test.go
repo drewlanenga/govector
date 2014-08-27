@@ -6,7 +6,7 @@ import (
 )
 
 func TestVectors(t *testing.T) {
-	x := IntToVector([]int{1, 2, 3, 4, 6, 5})
+	x := IntToVector([]int{2, 2, 2, 4, 2, 5})
 	w := Float64ToVector([]float64{1.0, 1.0, 1.0, 1.0, 1.0, 4.0})
 
 	d_x, err := x.Diff()
@@ -29,4 +29,15 @@ func TestVectors(t *testing.T) {
 
 	_, err = x.Cumsum()
 	assert.Equal(t, nil, err, "Error calculating cumulative sum")
+
+	_, err = x.Rank()
+	assert.Equal(t, nil, err, "Error calculating ranks")
+
+	_, err = x.Shuffle()
+	assert.Equal(t, nil, err, "Error shuffling vector")
+
+	y := IntToVector([]int{-2, 2, -1, 4, 2, 5})
+
+	_, err = y.Abs()
+	assert.Equal(t, nil, err, "Error shuffling vector")
 }
