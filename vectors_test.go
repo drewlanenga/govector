@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestEverything(t *testing.T) {
+func TestVectors(t *testing.T) {
 	x := IntToVector([]int{1, 2, 3, 4, 6, 5})
 	w := Float64ToVector([]float64{1.0, 1.0, 1.0, 1.0, 1.0, 4.0})
 
