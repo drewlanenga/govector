@@ -16,7 +16,7 @@ func IntToVector(x []int) Vector {
 	return y
 }
 
-func Uint8ToVector(x []int) Vector {
+func Uint8ToVector(x []uint8) Vector {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {
@@ -25,7 +25,7 @@ func Uint8ToVector(x []int) Vector {
 	return y
 }
 
-func Uint16ToVector(x []int) Vector {
+func Uint16ToVector(x []uint16) Vector {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {
@@ -34,7 +34,7 @@ func Uint16ToVector(x []int) Vector {
 	return y
 }
 
-func Uint32ToVector(x []int) Vector {
+func Uint32ToVector(x []uint32) Vector {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {
@@ -43,7 +43,7 @@ func Uint32ToVector(x []int) Vector {
 	return y
 }
 
-func Uint64ToVector(x []int) Vector {
+func Uint64ToVector(x []uint64) Vector {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {
@@ -61,7 +61,7 @@ func Int8ToVector(x []int) Vector {
 	return y
 }
 
-func Int16ToVector(x []int) Vector {
+func Int16ToVector(x []int16) Vector {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {
@@ -70,7 +70,7 @@ func Int16ToVector(x []int) Vector {
 	return y
 }
 
-func Int32ToVector(x []int) Vector {
+func Int32ToVector(x []int32) Vector {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {
@@ -88,7 +88,7 @@ func Int64ToVector(x []int64) Vector {
 	return y
 }
 
-func Float32ToVector(x []float64) Vector {
+func Float32ToVector(x []float32) Vector {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {

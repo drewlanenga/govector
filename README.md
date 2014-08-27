@@ -4,7 +4,7 @@ Provide [R](http://cran.r-project.org)-like vector syntax for handling numeric t
 
 ## Usage
 
-```
+```go
 # create a Vector type from an int array
 x := IntToVector([]int{1, 2, 3, 4, 6, 5})
 
