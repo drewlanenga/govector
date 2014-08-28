@@ -2,6 +2,7 @@ package govector
 
 import (
 	"github.com/bmizerany/assert"
+	//"sort"
 	"testing"
 )
 
@@ -21,11 +22,10 @@ func TestVectors(t *testing.T) {
 	min := x.Min()
 	assert.Equal(t, 2.0, min, "Error calculating min")
 
-	empirical, err := d_w.Ecdf()
+	empirical, err := x.Ecdf()
 	assert.Equal(t, nil, err, "Error creating CDF function")
 
-	_, err = empirical(2.4)
-	assert.Equal(t, nil, err, "Error calculating CDF percentile")
+	_ = empirical(2.4)
 
 	_, err = d_x.WeightedMean(d_w)
 	assert.Equal(t, nil, err, "Error calculating weighted mean")
@@ -45,5 +45,7 @@ func TestVectors(t *testing.T) {
 	y := IntToVector([]int{-2, 2, -1, 4, 2, 5})
 
 	_, err = y.Abs()
-	assert.Equal(t, nil, err, "Error shuffling vector")
+	assert.Equal(t, nil, err, "Error finding absolute values")
+
+	_ = x.Apply(empirical)
 }

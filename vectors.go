@@ -15,7 +15,7 @@ const (
 type Vector []float64
 
 // not sure if this is a deep copy yet
-func (x Vector) copy() (Vector, error) {
+func (x Vector) Copy() (Vector, error) {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {
@@ -51,7 +51,7 @@ func (x Vector) Sum() float64 {
 
 // Return the absolute values of the vector elements
 func (x Vector) Abs() (Vector, error) {
-	y, err := x.copy()
+	y, err := x.Copy()
 	if err != nil {
 		return nil, err
 	}
@@ -170,33 +170,43 @@ func (x Vector) Min() float64 {
 
 // Return the empirical cumulative distribution function.  The ECDF function
 // will return the percentile of a given value relative to the vector.
-func (x Vector) Ecdf() (func(float64) (float64, error), error) {
-	y, err := x.copy()
+func (x Vector) Ecdf() (func(float64) float64, error) {
+	y, err := x.Copy()
 	if err != nil {
 		return nil, err
 	}
 	sort.Sort(y)
 	n := len(y)
 
-	empirical := func(q float64) (float64, error) {
+	empirical := func(q float64) float64 {
 		i := 0
 		for i < n {
 			if q <= y[i] {
-				return float64(i) / float64(n), nil
+				return float64(i+1) / float64(n)
 			}
 			i++
 		}
-
-		return 1.0, nil
+		return 1.0
 	}
 
 	return empirical, nil
 }
 
+// Return the values of the vector applied to an arbitrary function, which must
+// return a float64, since a Vector will be returned
+func (x Vector) Apply(f func(float64) float64) Vector {
+	y := make(Vector, len(x))
+
+	for i, v := range x {
+		y[i] = f(v)
+	}
+	return y
+}
+
 // Return the quantiles of a vector corresponding to input quantiles using a
 // weighted average approach for index interpolation.
 func (x Vector) Quantiles(q Vector) (Vector, error) {
-	y, err := x.copy()
+	y, err := x.Copy()
 	if err != nil {
 		return nil, err
 	}
@@ -284,13 +294,13 @@ func (x Vector) Shuffle() (Vector, error) {
 
 // Return a vector of the ranked values of the input vector
 func (x Vector) Rank() (Vector, error) {
-	y, err := x.copy()
+	y, err := x.Copy()
 	if err != nil {
 		return nil, err
 	}
 	sort.Sort(y)
 
-	// essentially equivalent to a minimum rank method
+	// essentially equivalent to a minimum rank (tie) method
 	rank := 0
 	ranks := make(Vector, len(x))
 	for i, _ := range y {

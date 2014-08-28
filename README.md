@@ -1,6 +1,6 @@
 # govector
 
-Provide [R](http://cran.r-project.org)-like vector syntax for handling numeric types in [Go](http://golang.org).
+Provide nice vector syntax for handling numeric types in [Go](http://golang.org).
 
 ## Usage
 
@@ -28,4 +28,11 @@ quantiles, _ = x.Quantiles(Float64ToVector([]float64{0.05, 0.95}))
 
 # cumulative sum
 s, _ = x.Cumsum()
+
+# shuffle x
+shuffled, _ := x.Shuffle()
+
+# Apply arbitrary functions to vectors
+_ = x.Apply(empirical)
+_ = x.Apply(math.Sqrt)
 ```
