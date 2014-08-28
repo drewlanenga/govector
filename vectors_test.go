@@ -15,6 +15,12 @@ func TestVectors(t *testing.T) {
 	d_w, err := w.Diff()
 	assert.Equal(t, nil, err, "Error calculating vector differences")
 
+	max := x.Max()
+	assert.Equal(t, 5.0, max, "Error calculating max")
+
+	min := x.Min()
+	assert.Equal(t, 2.0, min, "Error calculating min")
+
 	empirical, err := d_w.Ecdf()
 	assert.Equal(t, nil, err, "Error creating CDF function")
 

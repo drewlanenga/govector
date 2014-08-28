@@ -18,4 +18,7 @@ func TestAlgebra(t *testing.T) {
 
 	_, err = Cosine(x, y)
 	assert.Equal(t, nil, err, "Error calculating cosine similarity")
+
+	_, err = Cor(x, y)
+	assert.Equal(t, nil, err, "Error calculating vector correlation")
 }

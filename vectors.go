@@ -41,12 +41,12 @@ func (x Vector) Less(i, j int) bool {
 }
 
 // Return the sum of the vector
-func (x Vector) Sum() (float64, error) {
+func (x Vector) Sum() float64 {
 	s := 0.0
 	for _, v := range x {
 		s += v
 	}
-	return s, nil
+	return s
 }
 
 // Return the absolute values of the vector elements
@@ -80,10 +80,7 @@ func (x Vector) Cumsum() (Vector, error) {
 
 // Return the mean of the vector
 func (x Vector) Mean() (float64, error) {
-	s, err := x.Sum()
-	if err != nil {
-		return 0, err
-	}
+	s := x.Sum()
 
 	n := float64(len(x))
 
@@ -114,10 +111,7 @@ func (x Vector) WeightedMean(w Vector) (float64, error) {
 	if err != nil {
 		return 0, err
 	}
-	sw, err := w.Sum()
-	if err != nil {
-		return 0, err
-	}
+	sw := w.Sum()
 
 	return ws / sw, nil
 }
@@ -150,6 +144,28 @@ func (x Vector) Sd() (float64, error) {
 	}
 
 	return math.Sqrt(v), nil
+}
+
+// Return the maximum value of the vector
+func (x Vector) Max() float64 {
+	max := x[0]
+	for _, v := range x {
+		if v > max {
+			max = v
+		}
+	}
+	return max
+}
+
+// Return the minimum value of the vector
+func (x Vector) Min() float64 {
+	min := x[0]
+	for _, v := range x {
+		if v < min {
+			min = v
+		}
+	}
+	return min
 }
 
 // Return the empirical cumulative distribution function.  The ECDF function
