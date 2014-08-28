@@ -91,7 +91,7 @@ func (x Vector) Mean() (float64, error) {
 // calculating the weighted mean.
 func (x Vector) weightedSum(w Vector) (float64, error) {
 	if len(x) != len(w) {
-		return 0, fmt.Errorf("Length of weights unequal to vector length")
+		return NA, fmt.Errorf("Length of weights unequal to vector length")
 	}
 
 	ws := 0.0
@@ -104,12 +104,12 @@ func (x Vector) weightedSum(w Vector) (float64, error) {
 // Return the weighted mean of the vector for a given vector of weights.
 func (x Vector) WeightedMean(w Vector) (float64, error) {
 	if len(x) != len(w) {
-		return 0, fmt.Errorf("Length of weights unequal to vector length")
+		return NA, fmt.Errorf("Length of weights unequal to vector length")
 	}
 
 	ws, err := x.weightedSum(w)
 	if err != nil {
-		return 0, err
+		return NA, err
 	}
 	sw := w.Sum()
 
@@ -120,7 +120,7 @@ func (x Vector) WeightedMean(w Vector) (float64, error) {
 func (x Vector) Variance() (float64, error) {
 	m, err := x.Mean()
 	if err != nil {
-		return 0, err
+		return NA, err
 	}
 
 	n := float64(len(x))
@@ -140,7 +140,7 @@ func (x Vector) Variance() (float64, error) {
 func (x Vector) Sd() (float64, error) {
 	v, err := x.Variance()
 	if err != nil {
-		return 0, err
+		return NA, err
 	}
 
 	return math.Sqrt(v), nil

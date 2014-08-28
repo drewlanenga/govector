@@ -22,7 +22,7 @@ func Product(x, y Vector) (Vector, error) {
 func DotProduct(x, y Vector) (float64, error) {
 	p, err := Product(x, y)
 	if err != nil {
-		return 0, err
+		return NA, err
 	}
 	return p.Sum(), nil
 }
@@ -42,7 +42,7 @@ func Norm(x Vector, pow float64) float64 {
 func Cosine(x, y Vector) (float64, error) {
 	d, err := DotProduct(x, y)
 	if err != nil {
-		return 0, err
+		return NA, err
 	}
 
 	xnorm := Norm(x, 2.0)
@@ -56,25 +56,25 @@ func Cor(x, y Vector) (float64, error) {
 	n := float64(len(x))
 	xy, err := Product(x, y)
 	if err != nil {
-		return 0, err
+		return NA, err
 	}
 
 	sx, err := x.Sd()
 	if err != nil {
-		return 0, err
+		return NA, err
 	}
 	sy, err := y.Sd()
 	if err != nil {
-		return 0, err
+		return NA, err
 	}
 
 	mx, err := x.Mean()
 	if err != nil {
-		return 0, err
+		return NA, err
 	}
 	my, err := y.Mean()
 	if err != nil {
-		return 0, nil
+		return NA, nil
 	}
 
 	r := (xy.Sum() - n*mx*my) / ((n - 1) * sx * sy)
