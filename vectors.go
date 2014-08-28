@@ -260,18 +260,26 @@ func (x Vector) Diff() (Vector, error) {
 	return d, nil
 }
 
-// Return a shuffled copy of the original input vector
-func (x Vector) Shuffle() (Vector, error) {
+// Return a sample of n elements of the original input vector
+func (x Vector) Sample(n int) (Vector, error) {
 	rand.Seed(time.Now().UnixNano())
 
 	perm := rand.Perm(len(x))
 
-	y := make(Vector, len(x))
+	// sample n elements
+	perm = perm[:n]
+
+	y := make(Vector, n)
 	for yi, permi := range perm {
 		y[yi] = x[permi]
 	}
 
 	return y, nil
+}
+
+// Return a shuffled copy of the original input vector
+func (x Vector) Shuffle() (Vector, error) {
+	return x.Sample(len(x))
 }
 
 // Return a vector of the ranked values of the input vector
