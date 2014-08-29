@@ -3,12 +3,16 @@ package govector
 import (
 	"github.com/bmizerany/assert"
 	//"sort"
+	"fmt"
 	"testing"
 )
 
 func TestVectors(t *testing.T) {
 	x := IntToVector([]int{2, 2, 2, 4, 2, 5})
 	w := Float64ToVector([]float64{1.0, 1.0, 1.0, 1.0, 1.0, 4.0})
+
+	v, err := x.Append(w)
+	assert.Equal(t, nil, err, "Error forming appended vector")
 
 	d_x, err := x.Diff()
 	assert.Equal(t, nil, err, "Error calculating vector differences")
