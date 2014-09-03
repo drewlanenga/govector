@@ -288,6 +288,24 @@ func (x Vector) Shuffle() (Vector, error) {
 	return x.Sample(len(x))
 }
 
+// Given two vectors (x.Append(y)), append y onto x
+func (x Vector) Append(y Vector) (Vector, error) {
+	length := x.Len() + y.Len()
+	z := make(Vector, length)
+
+	i := 0
+	j := x.Len()
+	for i < x.Len() {
+		z[i] = x[i]
+		i++
+	}
+	for j < length {
+		z[j] = y[j-x.Len()]
+		j++
+	}
+	return z, nil
+}
+
 // Return a vector of the ranked values of the input vector
 func (x Vector) Rank() (Vector, error) {
 	y, err := x.Copy()
