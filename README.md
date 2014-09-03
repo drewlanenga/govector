@@ -6,10 +6,10 @@ Provide nice vector syntax for handling numeric types in [Go](http://golang.org)
 
 ```go
 # create a Vector type from an int array
-x := IntToVector([]int{1, 2, 3, 4, 6, 5})
+x, err := AsVector([]int{1, 2, 3, 4, 6, 5})
 
 # create a Vector type from a float64 array, to be used for weights
-w := Float64ToVector([]float64{1.0, 1.0, 1.0, 1.0, 1.0, 4.0})
+w, _ := AsVector([]float64{1.0, 1.0, 1.0, 1.0, 1.0, 4.0})
 
 # find the differences of the Vector x
 d_x, _ := x.Diff()
@@ -24,7 +24,8 @@ percentile, _ = empirical(2.4)
 wm, _ = x.WeightedMean(w)
 
 # Calculate the 5% and 95% quantiles of x
-quantiles, _ = x.Quantiles(Float64ToVector([]float64{0.05, 0.95}))
+q, _ := AsVector([]float64{0.05, 0.95})
+quantiles, _ = x.Quantiles(q)
 
 # cumulative sum
 s, _ = x.Cumsum()
