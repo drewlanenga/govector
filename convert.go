@@ -1,13 +1,44 @@
 package govector
 
-import ()
+import (
+	"fmt"
+)
 
 //
 //  there has got to be a better way to do these type conversions
 //	... and ignore complex types for now
 //
 
-func IntToVector(x []int) Vector {
+func AsVector(any interface{}) (Vector, error) {
+	switch x := any.(type) {
+	case []uint8:
+		return uint8ToVector(x), nil
+	case []uint16:
+		return uint16ToVector(x), nil
+	case []uint32:
+		return uint32ToVector(x), nil
+	case []uint64:
+		return uint64ToVector(x), nil
+	case []int:
+		return intToVector(x), nil
+	case []int8:
+		return int8ToVector(x), nil
+	case []int16:
+		return int16ToVector(x), nil
+	case []int32:
+		return int32ToVector(x), nil
+	case []int64:
+		return int64ToVector(x), nil
+	case []float32:
+		return float32ToVector(x), nil
+	case []float64:
+		return float64ToVector(x), nil
+	default:
+		return nil, fmt.Errorf("Unable to coerce input into vector")
+	}
+}
+
+func uint8ToVector(x []uint8) Vector {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {
@@ -16,7 +47,7 @@ func IntToVector(x []int) Vector {
 	return y
 }
 
-func Uint8ToVector(x []uint8) Vector {
+func uint16ToVector(x []uint16) Vector {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {
@@ -25,7 +56,7 @@ func Uint8ToVector(x []uint8) Vector {
 	return y
 }
 
-func Uint16ToVector(x []uint16) Vector {
+func uint32ToVector(x []uint32) Vector {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {
@@ -34,7 +65,7 @@ func Uint16ToVector(x []uint16) Vector {
 	return y
 }
 
-func Uint32ToVector(x []uint32) Vector {
+func uint64ToVector(x []uint64) Vector {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {
@@ -43,7 +74,7 @@ func Uint32ToVector(x []uint32) Vector {
 	return y
 }
 
-func Uint64ToVector(x []uint64) Vector {
+func intToVector(x []int) Vector {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {
@@ -52,7 +83,7 @@ func Uint64ToVector(x []uint64) Vector {
 	return y
 }
 
-func Int8ToVector(x []int) Vector {
+func int8ToVector(x []int8) Vector {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {
@@ -61,7 +92,7 @@ func Int8ToVector(x []int) Vector {
 	return y
 }
 
-func Int16ToVector(x []int16) Vector {
+func int16ToVector(x []int16) Vector {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {
@@ -70,7 +101,7 @@ func Int16ToVector(x []int16) Vector {
 	return y
 }
 
-func Int32ToVector(x []int32) Vector {
+func int32ToVector(x []int32) Vector {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {
@@ -79,7 +110,7 @@ func Int32ToVector(x []int32) Vector {
 	return y
 }
 
-func Int64ToVector(x []int64) Vector {
+func int64ToVector(x []int64) Vector {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {
@@ -88,7 +119,7 @@ func Int64ToVector(x []int64) Vector {
 	return y
 }
 
-func Float32ToVector(x []float32) Vector {
+func float32ToVector(x []float32) Vector {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {
@@ -97,6 +128,6 @@ func Float32ToVector(x []float32) Vector {
 	return y
 }
 
-func Float64ToVector(x []float64) Vector {
+func float64ToVector(x []float64) Vector {
 	return Vector(x)
 }

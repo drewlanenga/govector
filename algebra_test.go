@@ -6,10 +6,12 @@ import (
 )
 
 func TestAlgebra(t *testing.T) {
-	x := IntToVector([]int{1, 2, 3, 4, 6, 5})
-	y := IntToVector([]int{2, 1, 3, 4, 5, 6})
+	x, err := AsVector([]int{1, 2, 3, 4, 6, 5})
+	assert.Equal(t, nil, err, "Error casting integer array to vector")
 
-	var err error
+	y, err := AsVector([]int{2, 1, 3, 4, 5, 6})
+	assert.Equal(t, nil, err, "Error casting integer array to vector")
+
 	_, err = Product(x, y)
 	assert.Equal(t, nil, err, "Error calculating vector product")
 

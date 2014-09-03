@@ -103,10 +103,6 @@ func (x Vector) weightedSum(w Vector) (float64, error) {
 
 // Return the weighted mean of the vector for a given vector of weights.
 func (x Vector) WeightedMean(w Vector) (float64, error) {
-	if len(x) != len(w) {
-		return NA, fmt.Errorf("Length of weights unequal to vector length")
-	}
-
 	ws, err := x.weightedSum(w)
 	if err != nil {
 		return NA, err

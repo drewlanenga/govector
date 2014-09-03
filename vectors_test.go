@@ -2,13 +2,18 @@ package govector
 
 import (
 	"github.com/bmizerany/assert"
-	//"sort"
 	"testing"
 )
 
 func TestVectors(t *testing.T) {
-	x := IntToVector([]int{2, 2, 2, 4, 2, 5})
-	w := Float64ToVector([]float64{1.0, 1.0, 1.0, 1.0, 1.0, 4.0})
+	x, err := AsVector([]int{2, 2, 2, 4, 2, 5})
+	assert.Equal(t, nil, err, "Error casting integer array to vector")
+
+	w, err := AsVector([]float64{1.0, 1.0, 1.0, 1.0, 1.0, 4.0})
+	assert.Equal(t, nil, err, "Error casting float64 array to vector")
+
+	q, err := AsVector([]float64{0.05, 0.95})
+	assert.Equal(t, nil, err, "Error casing float64 array to vector")
 
 	d_x, err := x.Diff()
 	assert.Equal(t, nil, err, "Error calculating vector differences")
@@ -30,7 +35,7 @@ func TestVectors(t *testing.T) {
 	_, err = d_x.WeightedMean(d_w)
 	assert.Equal(t, nil, err, "Error calculating weighted mean")
 
-	_, err = x.Quantiles(Float64ToVector([]float64{0.05, 0.95}))
+	_, err = x.Quantiles(q)
 	assert.Equal(t, nil, err, "Error calculating quantiles")
 
 	_, err = x.Cumsum()
@@ -42,7 +47,8 @@ func TestVectors(t *testing.T) {
 	_, err = x.Shuffle()
 	assert.Equal(t, nil, err, "Error shuffling vector")
 
-	y := IntToVector([]int{-2, 2, -1, 4, 2, 5})
+	y, err := AsVector([]int{-2, 2, -1, 4, 2, 5})
+	assert.Equal(t, nil, err, "Error casting negative integer array to vector")
 
 	_, err = y.Abs()
 	assert.Equal(t, nil, err, "Error finding absolute values")
