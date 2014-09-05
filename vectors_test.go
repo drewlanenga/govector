@@ -1,7 +1,6 @@
 package govector
 
 import (
-	"fmt"
 	"github.com/bmizerany/assert"
 	"testing"
 )
@@ -16,7 +15,7 @@ func TestVectors(t *testing.T) {
 	q, err := AsVector([]float64{0.05, 0.95})
 	assert.Equal(t, nil, err, "Error casing float64 array to vector")
 
-	v, err := x.Append(w)
+	_, err = x.Append(w)
 	assert.Equal(t, nil, err, "Error forming appended vector")
 
 	d_x, err := x.Diff()
@@ -34,7 +33,8 @@ func TestVectors(t *testing.T) {
 	empirical, err := x.Ecdf()
 	assert.Equal(t, nil, err, "Error creating CDF function")
 
-	_ = empirical(2.4)
+	percentile := empirical(2.4)
+	assert.Equal(t, 2.0/3.0, percentile, "Error in CDF calculation")
 
 	_, err = d_x.WeightedMean(d_w)
 	assert.Equal(t, nil, err, "Error calculating weighted mean")

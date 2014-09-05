@@ -177,8 +177,8 @@ func (x Vector) Ecdf() (func(float64) float64, error) {
 	empirical := func(q float64) float64 {
 		i := 0
 		for i < n {
-			if q <= y[i] {
-				return float64(i+1) / float64(n)
+			if q < y[i] {
+				return float64(i) / float64(n)
 			}
 			i++
 		}
