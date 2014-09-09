@@ -59,23 +59,11 @@ func Cor(x, y Vector) (float64, error) {
 		return NA, err
 	}
 
-	sx, err := x.Sd()
-	if err != nil {
-		return NA, err
-	}
-	sy, err := y.Sd()
-	if err != nil {
-		return NA, err
-	}
+	sx := x.Sd()
+	sy := y.Sd()
 
-	mx, err := x.Mean()
-	if err != nil {
-		return NA, err
-	}
-	my, err := y.Mean()
-	if err != nil {
-		return NA, nil
-	}
+	mx := x.Mean()
+	my := y.Mean()
 
 	r := (xy.Sum() - n*mx*my) / ((n - 1) * sx * sy)
 	return r, nil

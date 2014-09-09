@@ -14,19 +14,21 @@ const (
 
 type Vector []float64
 
-// not sure if this is a deep copy yet
-func (x Vector) Copy() (Vector, error) {
+// Returns a copy the input vector.  This is useful for functions
+// that perform modification and shuffling on the order of the input
+// vector.
+func (x Vector) Copy() Vector {
 	y := make(Vector, len(x))
 
 	for i, _ := range x {
 		y[i] = x[i]
 	}
 
-	return y, nil
+	return y
 
 }
 
-// Len, Swap, and Less are implemented to allow for native
+// Len, Swap, and Less are implemented to allow for direct
 // sorting on Vector types.
 func (x Vector) Len() int {
 	return len(x)
@@ -50,21 +52,18 @@ func (x Vector) Sum() float64 {
 }
 
 // Return the absolute values of the vector elements
-func (x Vector) Abs() (Vector, error) {
-	y, err := x.Copy()
-	if err != nil {
-		return nil, err
-	}
+func (x Vector) Abs() Vector {
+	y := x.Copy()
 
 	for i, _ := range y {
 		y[i] = math.Abs(y[i])
 	}
 
-	return y, nil
+	return y
 }
 
 // Return the cumulative sum of the vector
-func (x Vector) Cumsum() (Vector, error) {
+func (x Vector) Cumsum() Vector {
 	y := make(Vector, len(x))
 
 	y[0] = x[0]
@@ -75,16 +74,16 @@ func (x Vector) Cumsum() (Vector, error) {
 		i++
 	}
 
-	return y, nil
+	return y
 }
 
 // Return the mean of the vector
-func (x Vector) Mean() (float64, error) {
+func (x Vector) Mean() float64 {
 	s := x.Sum()
 
 	n := float64(len(x))
 
-	return s / n, nil
+	return s / n
 }
 
 // Return the weighted sum of the vector.  This is really only useful in
@@ -113,33 +112,27 @@ func (x Vector) WeightedMean(w Vector) (float64, error) {
 }
 
 // Caclulate the variance of the vector
-func (x Vector) Variance() (float64, error) {
-	m, err := x.Mean()
-	if err != nil {
-		return NA, err
-	}
-
+func (x Vector) Variance() float64 {
 	n := float64(len(x))
-	if n < 2 {
+	if n == 1 {
+		return 0
+	} else if n < 2 {
 		n = 2
 	}
+
+	m := x.Mean()
 
 	ss := 0.0
 	for _, v := range x {
 		ss += math.Pow(v-m, 2.0)
 	}
 
-	return ss / (n - 1), nil
+	return ss / (n - 1)
 }
 
 // Calculate the standard deviation of the vector
-func (x Vector) Sd() (float64, error) {
-	v, err := x.Variance()
-	if err != nil {
-		return NA, err
-	}
-
-	return math.Sqrt(v), nil
+func (x Vector) Sd() float64 {
+	return math.Sqrt(x.Variance())
 }
 
 // Return the maximum value of the vector
@@ -166,11 +159,9 @@ func (x Vector) Min() float64 {
 
 // Return the empirical cumulative distribution function.  The ECDF function
 // will return the percentile of a given value relative to the vector.
-func (x Vector) Ecdf() (func(float64) float64, error) {
-	y, err := x.Copy()
-	if err != nil {
-		return nil, err
-	}
+func (x Vector) Ecdf() func(float64) float64 {
+	y := x.Copy()
+
 	sort.Sort(y)
 	n := len(y)
 
@@ -185,7 +176,7 @@ func (x Vector) Ecdf() (func(float64) float64, error) {
 		return 1.0
 	}
 
-	return empirical, nil
+	return empirical
 }
 
 // Return the values of the vector applied to an arbitrary function, which must
@@ -201,11 +192,9 @@ func (x Vector) Apply(f func(float64) float64) Vector {
 
 // Return the quantiles of a vector corresponding to input quantiles using a
 // weighted average approach for index interpolation.
-func (x Vector) Quantiles(q Vector) (Vector, error) {
-	y, err := x.Copy()
-	if err != nil {
-		return nil, err
-	}
+func (x Vector) Quantiles(q Vector) Vector {
+	y := x.Copy()
+
 	sort.Sort(y)
 
 	n := float64(len(y))
@@ -243,31 +232,29 @@ func (x Vector) Quantiles(q Vector) (Vector, error) {
 		output[i], _ = values.WeightedMean(Vector{lowerWeight, upperWeight})
 	}
 
-	return output, nil
+	return output
 }
 
 // Return a vector of length (n - 1) of the differences in the input vector
-func (x Vector) Diff() (Vector, error) {
+func (x Vector) Diff() Vector {
 	n := len(x)
-	if n == 0 {
-		return nil, fmt.Errorf("Unable to find differences for empty vector")
-	}
 
-	d := make(Vector, n-1)
+	if n < 2 {
+		return Vector{NA}
+	} else {
+		d := make(Vector, n-1)
 
-	if n > 1 {
 		i := 1
 		for i < n {
 			d[i-1] = x[i] - x[i-1]
 			i++
 		}
+		return d
 	}
-
-	return d, nil
 }
 
 // Return a sample of n elements of the original input vector
-func (x Vector) Sample(n int) (Vector, error) {
+func (x Vector) Sample(n int) Vector {
 	rand.Seed(time.Now().UnixNano())
 
 	perm := rand.Perm(len(x))
@@ -280,38 +267,39 @@ func (x Vector) Sample(n int) (Vector, error) {
 		y[yi] = x[permi]
 	}
 
-	return y, nil
+	return y
 }
 
 // Return a shuffled copy of the original input vector
-func (x Vector) Shuffle() (Vector, error) {
+func (x Vector) Shuffle() Vector {
 	return x.Sample(len(x))
 }
 
-// Given two vectors (x.Append(y)), append y onto x
-func (x Vector) Append(y Vector) (Vector, error) {
-	length := x.Len() + y.Len()
-	z := make(Vector, length)
+// Returns an (efficiently joined) vector of the input vectors
+func Join(vectors ...Vector) Vector {
+	// figure out how big to make the resulting vector so we can
+	// allocate efficiently
+	n := 0
+	for _, vector := range vectors {
+		n += vector.Len()
+	}
 
 	i := 0
-	j := x.Len()
-	for i < x.Len() {
-		z[i] = x[i]
-		i++
+	v := make(Vector, n)
+	for _, vector := range vectors {
+		for _, value := range vector {
+			v[i] = value
+			i++
+		}
 	}
-	for j < length {
-		z[j] = y[j-x.Len()]
-		j++
-	}
-	return z, nil
+
+	return v
 }
 
 // Return a vector of the ranked values of the input vector
-func (x Vector) Rank() (Vector, error) {
-	y, err := x.Copy()
-	if err != nil {
-		return nil, err
-	}
+func (x Vector) Rank() Vector {
+	y := x.Copy()
+
 	sort.Sort(y)
 
 	// essentially equivalent to a minimum rank (tie) method
@@ -326,5 +314,11 @@ func (x Vector) Rank() (Vector, error) {
 			}
 		}
 	}
-	return ranks, nil
+	return ranks
+}
+
+// Appends the input vector with the value to be pushed
+func (x *Vector) Push(y float64) {
+	*x = append(*x, y)
+	return
 }
