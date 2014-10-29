@@ -4,11 +4,7 @@ import (
 	"fmt"
 )
 
-//
-//  there has got to be a better way to do these type conversions
-//	... and ignore complex types for now
-//
-
+// AsVector converts slices of numeric types into a Vector.
 func AsVector(any interface{}) (Vector, error) {
 	switch x := any.(type) {
 	case []uint8:
@@ -34,7 +30,7 @@ func AsVector(any interface{}) (Vector, error) {
 	case []float64:
 		return float64ToVector(x), nil
 	default:
-		return nil, fmt.Errorf("Unable to coerce input into vector")
+		return nil, fmt.Errorf("Unable to coerce input of type %T into vector", any)
 	}
 }
 

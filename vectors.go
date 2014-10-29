@@ -12,20 +12,17 @@ const (
 	NA = math.SmallestNonzeroFloat64
 )
 
+// rnd is a private prng so we don't alter global prng state
+var rnd = rand.New(rand.NewSource(time.Now().UnixNano()))
+
 type Vector []float64
 
-// Returns a copy the input vector.  This is useful for functions
-// that perform modification and shuffling on the order of the input
-// vector.
+// Copy returns a copy the input vector.  This is useful for functions that
+// perform modification and shuffling on the order of the input vector.
 func (x Vector) Copy() Vector {
 	y := make(Vector, len(x))
-
-	for i, _ := range x {
-		y[i] = x[i]
-	}
-
+	copy(y, x)
 	return y
-
 }
 
 // Len, Swap, and Less are implemented to allow for direct
@@ -42,7 +39,7 @@ func (x Vector) Less(i, j int) bool {
 	return x[i] < x[j]
 }
 
-// Return the sum of the vector
+// Sum returns the sum of the vector.
 func (x Vector) Sum() float64 {
 	s := 0.0
 	for _, v := range x {
@@ -51,7 +48,7 @@ func (x Vector) Sum() float64 {
 	return s
 }
 
-// Return the absolute values of the vector elements
+// Abs returns the absolute values of the vector elements.
 func (x Vector) Abs() Vector {
 	y := x.Copy()
 
@@ -62,7 +59,7 @@ func (x Vector) Abs() Vector {
 	return y
 }
 
-// Return the cumulative sum of the vector
+// Cumsum returns the cumulative sum of the vector.
 func (x Vector) Cumsum() Vector {
 	y := make(Vector, len(x))
 
@@ -77,7 +74,7 @@ func (x Vector) Cumsum() Vector {
 	return y
 }
 
-// Return the mean of the vector
+// Mean returns the mean of the vector.
 func (x Vector) Mean() float64 {
 	s := x.Sum()
 
@@ -253,11 +250,9 @@ func (x Vector) Diff() Vector {
 	}
 }
 
-// Return a sample of n elements of the original input vector
+// Sample returns a sample of n elements of the original input vector.
 func (x Vector) Sample(n int) Vector {
-	rand.Seed(time.Now().UnixNano())
-
-	perm := rand.Perm(len(x))
+	perm := rnd.Perm(len(x))
 
 	// sample n elements
 	perm = perm[:n]
@@ -270,12 +265,12 @@ func (x Vector) Sample(n int) Vector {
 	return y
 }
 
-// Return a shuffled copy of the original input vector
+// Shuffle returns a shuffled copy of the original input vector.
 func (x Vector) Shuffle() Vector {
 	return x.Sample(len(x))
 }
 
-// Returns an (efficiently joined) vector of the input vectors
+// Join returns an (efficiently joined) vector of the input vectors.
 func Join(vectors ...Vector) Vector {
 	// figure out how big to make the resulting vector so we can
 	// allocate efficiently
@@ -296,7 +291,7 @@ func Join(vectors ...Vector) Vector {
 	return v
 }
 
-// Return a vector of the ranked values of the input vector
+// Vector returns a vector of the ranked values of the input vector.
 func (x Vector) Rank() Vector {
 	y := x.Copy()
 
@@ -317,7 +312,7 @@ func (x Vector) Rank() Vector {
 	return ranks
 }
 
-// Appends the input vector with the value to be pushed
+// Push appends the input vector with the value to be pushed.
 func (x *Vector) Push(y float64) {
 	*x = append(*x, y)
 	return
