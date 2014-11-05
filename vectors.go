@@ -250,6 +250,24 @@ func (x Vector) Diff() Vector {
 	}
 }
 
+// RelDiff returns a vector of the relative differences of the input vector
+func (x Vector) RelDiff() Vector {
+	n := len(x)
+
+	if n < 2 {
+		return Vector{NA}
+	} else {
+		d := make(Vector, n-1)
+
+		i := 1
+		for i < n {
+			d[i-1] = (x[i] - x[i-1]) / x[i]
+			i++
+		}
+		return d
+	}
+}
+
 // Sample returns a sample of n elements of the original input vector.
 func (x Vector) Sample(n int) Vector {
 	perm := rnd.Perm(len(x))
