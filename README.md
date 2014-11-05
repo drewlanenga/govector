@@ -1,6 +1,9 @@
 # govector
 
-Provide nice vector syntax for handling numeric types in [Go](http://golang.org).
+[![Build Status](https://travis-ci.org/drewlanenga/govector.svg?branch=master)](https://travis-ci.org/drewlanenga/govector) [![GoDoc](https://godoc.org/github.com/drewlanenga/govector?status.svg)](https://godoc.org/github.com/drewlanenga/govector)
+
+
+Provide nice vector API for handling numeric types in [Go](http://golang.org).
 
 ## Usage
 
