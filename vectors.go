@@ -253,6 +253,24 @@ func (x Vector) Diff() Vector {
 	}
 }
 
+// Return a vector of the relative differences of the input vector
+func (x Vector) RelDiff() Vector {
+	n := len(x)
+
+	if n < 2 {
+		return Vector{NA}
+	} else {
+		d := make(Vector, n-1)
+
+		i := 1
+		for i < n {
+			d[i-1] = (x[i] - x[i-1]) / x[i]
+			i++
+		}
+		return d
+	}
+}
+
 // Return a sample of n elements of the original input vector
 func (x Vector) Sample(n int) Vector {
 	rand.Seed(time.Now().UnixNano())
