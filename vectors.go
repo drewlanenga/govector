@@ -5,6 +5,7 @@ import (
 	"math"
 	"math/rand"
 	"sort"
+	"sync"
 	"time"
 )
 
@@ -13,7 +14,10 @@ const (
 )
 
 // rnd is a private prng so we don't alter global prng state
-var rnd = rand.New(rand.NewSource(time.Now().UnixNano()))
+var (
+	rnd      = rand.New(rand.NewSource(time.Now().UnixNano()))
+	rndMutex = &sync.Mutex{}
+)
 
 type Vector []float64
 
@@ -270,7 +274,11 @@ func (x Vector) RelDiff() Vector {
 
 // Sample returns a sample of n elements of the original input vector.
 func (x Vector) Sample(n int) Vector {
+	// unprotected access to custom rand.Rand objects can cause panics
+	// https://github.com/golang/go/issues/3611
+	rndMutex.Lock()
 	perm := rnd.Perm(len(x))
+	rndMutex.Unlock()
 
 	// sample n elements
 	perm = perm[:n]
