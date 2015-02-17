@@ -1,8 +1,9 @@
 package govector
 
 import (
-	"github.com/bmizerany/assert"
 	"testing"
+
+	"github.com/bmizerany/assert"
 )
 
 func TestVectors(t *testing.T) {
@@ -57,4 +58,12 @@ func TestVectors(t *testing.T) {
 
 	xw := Join(x, w)
 	assert.Equal(t, x.Len()+w.Len(), xw.Len(), "Error joining vectors")
+
+	filtered := xw.Filter(func(x float64) bool {
+		if x < 10 {
+			return false
+		}
+		return true
+	})
+	assert.Equal(t, 12, len(filtered), "Error filtering vector")
 }
