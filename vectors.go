@@ -181,13 +181,27 @@ func (x Vector) Ecdf() func(float64) float64 {
 }
 
 // Return the values of the vector applied to an arbitrary function, which must
-// return a float64, since a Vector will be returned
+// return a float64, since a Vector will be returned.
 func (x Vector) Apply(f func(float64) float64) Vector {
 	y := make(Vector, len(x))
 
 	for i, v := range x {
 		y[i] = f(v)
 	}
+	return y
+}
+
+// Return the values that match the filter function.  Vector elements with return
+// values of TRUE are filtered/removed.
+func (x Vector) Filter(f func(float64) bool) Vector {
+	y := make(Vector, 0, len(x))
+
+	for _, v := range x {
+		if !f(v) {
+			y = append(y, v)
+		}
+	}
+
 	return y
 }
 
