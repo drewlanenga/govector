@@ -29,6 +29,33 @@ func (x Vector) Copy() Vector {
 	return y
 }
 
+// Smooth takes a sliding window average of vector. Indices i and j refer to the
+// the number of points you'd like to consider before and after a point in
+// the average.
+func (x Vector) Smooth(i, j int) (Vector, error) {
+	if i < 0 || j < 0 {
+		return x, fmt.Errorf("Indices i and j must be positive")
+	}
+
+	n := len(x)
+	smoothed := make(Vector, n)
+
+	for index := 0; index < n; index++ {
+		leftmost := index - i
+		if leftmost < 0 {
+			leftmost = 0
+		}
+		rightmost := index + j + 1
+		if rightmost > n {
+			rightmost = n
+		}
+		window := x[leftmost:rightmost]
+		smoothed[index] = window.Mean()
+	}
+
+	return smoothed, nil
+}
+
 // Len, Swap, and Less are implemented to allow for direct
 // sorting on Vector types.
 func (x Vector) Len() int {
@@ -87,7 +114,7 @@ func (x Vector) Mean() float64 {
 	return s / n
 }
 
-// Return the weighted sum of the vector.  This is really only useful in
+// weightedSum returns the weighted sum of the vector.  This is really only useful in
 // calculating the weighted mean.
 func (x Vector) weightedSum(w Vector) (float64, error) {
 	if len(x) != len(w) {
@@ -101,7 +128,7 @@ func (x Vector) weightedSum(w Vector) (float64, error) {
 	return ws, nil
 }
 
-// Return the weighted mean of the vector for a given vector of weights.
+// WeightedMean returns the weighted mean of the vector for a given vector of weights.
 func (x Vector) WeightedMean(w Vector) (float64, error) {
 	ws, err := x.weightedSum(w)
 	if err != nil {
@@ -112,7 +139,7 @@ func (x Vector) WeightedMean(w Vector) (float64, error) {
 	return ws / sw, nil
 }
 
-// Caclulate the variance of the vector
+// Variance caclulates the variance of the vector
 func (x Vector) Variance() float64 {
 	n := float64(len(x))
 	if n == 1 {
@@ -131,12 +158,12 @@ func (x Vector) Variance() float64 {
 	return ss / (n - 1)
 }
 
-// Calculate the standard deviation of the vector
+// Sd calculates the standard deviation of the vector
 func (x Vector) Sd() float64 {
 	return math.Sqrt(x.Variance())
 }
 
-// Return the maximum value of the vector
+// Max returns the maximum value of the vector
 func (x Vector) Max() float64 {
 	max := x[0]
 	for _, v := range x {
@@ -147,7 +174,7 @@ func (x Vector) Max() float64 {
 	return max
 }
 
-// Return the minimum value of the vector
+// Min returns the minimum value of the vector
 func (x Vector) Min() float64 {
 	min := x[0]
 	for _, v := range x {
@@ -158,7 +185,7 @@ func (x Vector) Min() float64 {
 	return min
 }
 
-// Return the empirical cumulative distribution function.  The ECDF function
+// Ecdf returns the empirical cumulative distribution function.  The ECDF function
 // will return the percentile of a given value relative to the vector.
 func (x Vector) Ecdf() func(float64) float64 {
 	y := x.Copy()
@@ -180,7 +207,7 @@ func (x Vector) Ecdf() func(float64) float64 {
 	return empirical
 }
 
-// Return the values of the vector applied to an arbitrary function, which must
+// Apply returns the values of the vector applied to an arbitrary function, which must
 // return a float64, since a Vector will be returned.
 func (x Vector) Apply(f func(float64) float64) Vector {
 	y := make(Vector, len(x))
@@ -191,7 +218,7 @@ func (x Vector) Apply(f func(float64) float64) Vector {
 	return y
 }
 
-// Return the values that match the filter function.  Vector elements with return
+// Filter returns the values that match the filter function.  Vector elements with return
 // values of TRUE are filtered/removed.
 func (x Vector) Filter(f func(float64) bool) Vector {
 	y := make(Vector, 0, len(x))
@@ -205,7 +232,7 @@ func (x Vector) Filter(f func(float64) bool) Vector {
 	return y
 }
 
-// Return the quantiles of a vector corresponding to input quantiles using a
+// Quantiles returns the quantiles of a vector corresponding to input quantiles using a
 // weighted average approach for index interpolation.
 func (x Vector) Quantiles(q Vector) Vector {
 	y := x.Copy()
@@ -250,7 +277,7 @@ func (x Vector) Quantiles(q Vector) Vector {
 	return output
 }
 
-// Return a vector of length (n - 1) of the differences in the input vector
+// Diff returns a vector of length (n - 1) of the differences in the input vector
 func (x Vector) Diff() Vector {
 	n := len(x)
 
@@ -331,7 +358,7 @@ func Join(vectors ...Vector) Vector {
 	return v
 }
 
-// Vector returns a vector of the ranked values of the input vector.
+// Rank returns a vector of the ranked values of the input vector.
 func (x Vector) Rank() Vector {
 	y := x.Copy()
 
