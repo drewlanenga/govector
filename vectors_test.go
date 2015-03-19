@@ -66,4 +66,9 @@ func TestVectors(t *testing.T) {
 		return true
 	})
 	assert.Equal(t, 12, len(filtered), "Error filtering vector")
+
+	x, _ = AsVector([]int{0, 2, 4, 6, 8, 10, 12, 14, 16, 18})
+	smoothed := x.Smooth(1, 1)
+	expected := Vector{1, 2, 4, 6, 8, 10, 12, 14, 16, 17}
+	assert.Equal(t, expected, smoothed, "Error smoothing vector")
 }

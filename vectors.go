@@ -29,6 +29,29 @@ func (x Vector) Copy() Vector {
 	return y
 }
 
+// Takes a sliding window average of vector. Indices i and j refer to the
+// the number of points you'd like to consider before and after a point in
+// the average.
+func (x Vector) Smooth(i, j int) Vector {
+	n := len(x)
+	smoothed := make(Vector, n)
+
+	for index := 0; index < n; index++ {
+		leftmost := index - i
+		if leftmost < 0 {
+			leftmost = 0
+		}
+		rightmost := index + j + 1
+		if rightmost > n {
+			rightmost = n
+		}
+		window := x[leftmost:rightmost]
+		smoothed[index] = window.Mean()
+	}
+
+	return smoothed
+}
+
 // Len, Swap, and Less are implemented to allow for direct
 // sorting on Vector types.
 func (x Vector) Len() int {
