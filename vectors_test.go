@@ -1,6 +1,7 @@
 package govector
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/bmizerany/assert"
@@ -67,15 +68,23 @@ func TestVectors(t *testing.T) {
 	})
 	assert.Equal(t, 12, len(filtered), "Error filtering vector")
 
-	x, _ = AsVector([]int{0, 2, 4, 6, 8, 10, 12, 14, 16, 18})
-	smoothed, err := x.Smooth(0, 0)
-	assert.Equal(t, nil, err, "Error smoothing vector")
-	assert.Equal(t, x, smoothed, "For i and j equal to zero, we'd expect to return the input vector after smoothing")
-	smoothed, err = x.Smooth(1, 1)
+	z, err := AsVector([]int{0, 2, 4, 6, 8, 10, 12, 14, 16, 18})
+	assert.Equal(t, nil, err)
+
+	smoothed, err := z.Smooth(0, 0)
+	assert.Equal(t, nil, err)
+	assert.Equal(t, z, smoothed)
+
+	smoothed, err = z.Smooth(1, 1)
 	expected := Vector{1, 2, 4, 6, 8, 10, 12, 14, 16, 17}
 	assert.Equal(t, nil, err, "Error smoothing vector")
 	assert.Equal(t, expected, smoothed, "Error smoothing vector")
-	smoothed, err = x.Smooth(-1, -1)
+
+	smoothed, err = z.Smooth(-1, -1)
 	assert.NotEqual(t, nil, err, "Negative input indices should return an error")
-	assert.Equal(t, x, smoothed, "Negative input indices should return the original vector")
+	assert.Equal(t, z, smoothed, "Negative input indices should return the original vector")
+
+	fmt.Println(x)
+	x.Sort()
+	fmt.Println(x)
 }

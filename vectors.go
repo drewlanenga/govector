@@ -70,6 +70,10 @@ func (x Vector) Less(i, j int) bool {
 	return x[i] < x[j]
 }
 
+func (x Vector) Sort() {
+	sort.Sort(x)
+}
+
 // Sum returns the sum of the vector.
 func (x Vector) Sum() float64 {
 	s := 0.0
@@ -190,7 +194,7 @@ func (x Vector) Min() float64 {
 func (x Vector) Ecdf() func(float64) float64 {
 	y := x.Copy()
 
-	sort.Sort(y)
+	y.Sort()
 	n := len(y)
 
 	empirical := func(q float64) float64 {
@@ -237,7 +241,7 @@ func (x Vector) Filter(f func(float64) bool) Vector {
 func (x Vector) Quantiles(q Vector) Vector {
 	y := x.Copy()
 
-	sort.Sort(y)
+	y.Sort()
 
 	n := float64(len(y))
 	output := make(Vector, len(q))
@@ -362,7 +366,7 @@ func Join(vectors ...Vector) Vector {
 func (x Vector) Rank() Vector {
 	y := x.Copy()
 
-	sort.Sort(y)
+	y.Sort()
 
 	// essentially equivalent to a minimum rank (tie) method
 	rank := 0
