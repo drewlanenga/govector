@@ -1,7 +1,6 @@
 package govector
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/bmizerany/assert"
@@ -84,7 +83,6 @@ func TestVectors(t *testing.T) {
 	assert.NotEqual(t, nil, err, "Negative input indices should return an error")
 	assert.Equal(t, z, smoothed, "Negative input indices should return the original vector")
 
-	fmt.Println(x)
 	x.Sort()
-	fmt.Println(x)
+	assert.Equal(t, Vector{2, 2, 2, 2, 4, 5, 50}, x)
 }
