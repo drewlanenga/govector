@@ -32,28 +32,26 @@ func (x Vector) Copy() Vector {
 // Smooth takes a sliding window average of vector. Indices i and j refer to the
 // the number of points you'd like to consider before and after a point in
 // the average.
-func (x Vector) Smooth(i, j int) (Vector, error) {
-	if i < 0 || j < 0 {
-		return x, fmt.Errorf("Indices i and j must be positive")
-	}
-
-	n := len(x)
+func (x Vector) Smooth(left, right uint) Vector {
+	n := uint(len(x))
 	smoothed := make(Vector, n)
 
-	for index := 0; index < n; index++ {
-		leftmost := index - i
-		if leftmost < 0 {
-			leftmost = 0
+	for index := uint(0); index < n; index++ {
+		var leftmost uint
+		if left < index {
+			leftmost = index - left
 		}
-		rightmost := index + j + 1
+
+		rightmost := index + right + 1
 		if rightmost > n {
 			rightmost = n
 		}
+
 		window := x[leftmost:rightmost]
 		smoothed[index] = window.Mean()
 	}
 
-	return smoothed, nil
+	return smoothed
 }
 
 // Len, Swap, and Less are implemented to allow for direct
