@@ -70,18 +70,12 @@ func TestVectors(t *testing.T) {
 	z, err := AsVector([]int{0, 2, 4, 6, 8, 10, 12, 14, 16, 18})
 	assert.Equal(t, nil, err)
 
-	smoothed, err := z.Smooth(0, 0)
-	assert.Equal(t, nil, err)
+	smoothed := z.Smooth(0, 0)
 	assert.Equal(t, z, smoothed)
 
-	smoothed, err = z.Smooth(1, 1)
+	smoothed = z.Smooth(1, 1)
 	expected := Vector{1, 2, 4, 6, 8, 10, 12, 14, 16, 17}
-	assert.Equal(t, nil, err, "Error smoothing vector")
 	assert.Equal(t, expected, smoothed, "Error smoothing vector")
-
-	smoothed, err = z.Smooth(-1, -1)
-	assert.NotEqual(t, nil, err, "Negative input indices should return an error")
-	assert.Equal(t, z, smoothed, "Negative input indices should return the original vector")
 
 	x.Sort()
 	assert.Equal(t, Vector{2, 2, 2, 2, 4, 5, 50}, x)
