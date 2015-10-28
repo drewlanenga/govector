@@ -1,6 +1,7 @@
 package govector
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/bmizerany/assert"
@@ -79,4 +80,19 @@ func TestVectors(t *testing.T) {
 
 	x.Sort()
 	assert.Equal(t, Vector{2, 2, 2, 2, 4, 5, 50}, x)
+}
+
+func TestFixedPush(t *testing.T) {
+	arr := make([]float64, 3, 3)
+
+	v := Vector(arr)
+	v.PushFixed(5.0)
+	v.PushFixed(25.0)
+	v.PushFixed(125.0)
+	fmt.Printf("%#v\n", v)
+	assert.Equal(t, v[2], 125.0)
+
+	v.PushFixed(250.0)
+	assert.Equal(t, v[2], 250.0)
+	assert.Equal(t, v[0], 25.0)
 }
