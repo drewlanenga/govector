@@ -1,7 +1,6 @@
 package govector
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/bmizerany/assert"
@@ -89,10 +88,10 @@ func TestFixedPush(t *testing.T) {
 	v.PushFixed(5.0)
 	v.PushFixed(25.0)
 	v.PushFixed(125.0)
-	fmt.Printf("%#v\n", v)
 	assert.Equal(t, v[2], 125.0)
 
 	v.PushFixed(250.0)
 	assert.Equal(t, v[2], 250.0)
 	assert.Equal(t, v[0], 25.0)
+	assert.Equal(t, len(v), 3)
 }
