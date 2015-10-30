@@ -386,3 +386,18 @@ func (x *Vector) Push(y float64) {
 	*x = append(*x, y)
 	return
 }
+
+func (x *Vector) PushFixed(y float64) error {
+	lenx := len(*x)
+	if lenx == cap(*x) {
+		slicex := (*x)[1:]
+
+		z := make([]float64, lenx, lenx)
+		copy(z, slicex)
+		z[lenx-1] = y
+		*x = z
+		return nil
+	} else {
+		return fmt.Errorf("GoVector len and cap different! %#v", x)
+	}
+}
