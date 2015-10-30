@@ -85,13 +85,15 @@ func TestFixedPush(t *testing.T) {
 	arr := make([]float64, 3, 3)
 
 	v := Vector(arr)
-	v.PushFixed(5.0)
-	v.PushFixed(25.0)
-	v.PushFixed(125.0)
+	err := v.PushFixed(5.0)
+	err = v.PushFixed(25.0)
+	err = v.PushFixed(125.0)
 	assert.Equal(t, v[2], 125.0)
 
-	v.PushFixed(250.0)
-	assert.Equal(t, v[2], 250.0)
-	assert.Equal(t, v[0], 25.0)
+	err = v.PushFixed(250.0)
+	err = v.PushFixed(350.0)
+	assert.Equal(t, err, nil)
+	assert.Equal(t, v[2], 350.0)
+	assert.Equal(t, v[0], 125.0)
 	assert.Equal(t, len(v), 3)
 }
