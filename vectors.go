@@ -387,17 +387,18 @@ func (x *Vector) Push(y float64) {
 	return
 }
 
+//Append values to an array. Array size will not grow if unnecessary.
+//It will grow if the cap has been extended by external modification.
 func (x *Vector) PushFixed(y float64) error {
 	lenx := len(*x)
-	if lenx == cap(*x) {
+	if lenx <= cap(*x) {
 		slicex := (*x)[1:]
-
 		z := make([]float64, lenx, lenx)
 		copy(z, slicex)
 		z[lenx-1] = y
 		*x = z
 		return nil
 	} else {
-		return fmt.Errorf("GoVector len and cap different! %#v", x)
+		return fmt.Errorf("GoVector length greater than capacity!? len: %d cap: %d\n%#v", len(*x), cap(*x), x)
 	}
 }
