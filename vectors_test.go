@@ -30,6 +30,10 @@ func TestVectors(t *testing.T) {
 	percentile := empirical(2.4)
 	assert.Equal(t, 2.0/3.0, percentile, "Error in CDF calculation")
 
+	m, v := Vector{1., 2., 3.}.MeanVar()
+	assert.Equal(t, 2., m, "Incorrect mean calculation")
+	assert.Equal(t, 1., v, "Incorrect variance calculation")
+
 	_, err = d_x.WeightedMean(d_w)
 	assert.Equal(t, nil, err, "Error calculating weighted mean")
 

@@ -141,8 +141,7 @@ func (x Vector) WeightedMean(w Vector) (float64, error) {
 	return ws / sw, nil
 }
 
-// Variance caclulates the variance of the vector
-func (x Vector) Variance() float64 {
+func (x Vector) variance(mean float64) float64 {
 	n := float64(len(x))
 	if n == 1 {
 		return 0
@@ -150,14 +149,24 @@ func (x Vector) Variance() float64 {
 		n = 2
 	}
 
-	m := x.Mean()
-
 	ss := 0.0
 	for _, v := range x {
-		ss += math.Pow(v-m, 2.0)
+		ss += math.Pow(v-mean, 2.0)
 	}
 
 	return ss / (n - 1)
+}
+
+// Variance caclulates the variance of the vector
+func (x Vector) Variance() float64 {
+	return x.variance(x.Mean())
+}
+
+// MeanVar returns both the mean and the variance of the vector
+func (x Vector) MeanVar() (float64, float64) {
+	m := x.Mean()
+	v := x.variance(m)
+	return m, v
 }
 
 // Sd calculates the standard deviation of the vector
