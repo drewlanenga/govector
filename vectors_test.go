@@ -43,7 +43,10 @@ func TestVectors(t *testing.T) {
 	assert.Equal(t, Vector{2, 4, 6, 10, 12, 17}, cumsum, "Error calculating cumulative sum")
 
 	ranks := x.Rank()
-	assert.Equal(t, Vector{3, 0, 0, 4, 0, 5}, ranks, "Error calculating ranks")
+	assert.Equal(t, Vector{0, 0, 0, 4, 0, 5}, ranks, "Error calculating ranks")
+
+	order := x.Order()
+	assert.Equal(t, Vector{0, 1, 2, 4, 3, 5}, order, "Error calculating order")
 
 	shuffled := x.Shuffle()
 	assert.Equal(t, x.Len(), shuffled.Len(), "Error shuffling vector")

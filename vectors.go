@@ -372,22 +372,47 @@ func Join(vectors ...Vector) Vector {
 // Rank returns a vector of the ranked values of the input vector.
 func (x Vector) Rank() Vector {
 	y := x.Copy()
-
 	y.Sort()
 
-	// essentially equivalent to a minimum rank (tie) method
+	// equivalent to a minimum rank (tie) method
 	rank := 0
 	ranks := make(Vector, len(x))
+	for i, _ := range ranks {
+		ranks[i] = -1
+	}
+
 	for i, _ := range y {
 		for j, _ := range x {
-			if y[i] == x[j] {
+			if y[i] == x[j] && ranks[j] == -1 {
 				ranks[j] = float64(rank)
+			}
+		}
+		rank++
+	}
+
+	return ranks
+}
+
+// Order returns a vector of untied ranks of the input vector.
+func (x Vector) Order() Vector {
+	y := x.Copy()
+	y.Sort()
+
+	rank := 0
+	order := make(Vector, len(x))
+	for i, _ := range order {
+		order[i] = -1
+	}
+	for i, _ := range y {
+		for j, _ := range x {
+			if y[i] == x[j] && order[j] == -1 {
+				order[j] = float64(rank)
 				rank++
 				break
 			}
 		}
 	}
-	return ranks
+	return order
 }
 
 // Push appends the input vector with the value to be pushed.
