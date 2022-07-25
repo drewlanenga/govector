@@ -51,6 +51,21 @@ func TestVectors(t *testing.T) {
 	shuffled := x.Shuffle()
 	assert.Equal(t, x.Len(), shuffled.Len(), "Error shuffling vector")
 
+	unique := x.Unique()
+	assert.Equal(t, Vector{2.0, 4.0, 5.0}, unique, "Error getting unique values")
+
+	sub := Vector{1.0, 0.0, 0.5, 3.5, 0.2, 0.3}
+	difference, err := x.Subtract(sub)
+	assert.Equal(t, nil, err, "Differing lengths in subtracting two vectors")
+	assert.Equal(t, Vector{1.0, 2.0, 1.5, 0.5, 1.8, 4.7}, difference, "Error subtracting vectors")
+
+	cdifference := x.SubtractConst(1.0)
+	assert.Equal(t, Vector{1.0, 1.0, 1.0, 3.0, 1.0, 4.0}, cdifference, "Error subtracting constant from vector")
+
+	toround := Vector{0.1134224, 0.29985, 0.00081, 0.2, 0.5555}
+	rounded := toround.Round(2)
+	assert.Equal(t, Vector{0.11, 0.30, 0.0, 0.2, 0.56}, rounded, "Error rounding vector")
+
 	y, err := AsVector([]int{-2, 2, -1, 4, 2, 5})
 	assert.Equal(t, nil, err, "Error casting negative integer array to vector")
 
