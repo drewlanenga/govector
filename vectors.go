@@ -5,6 +5,7 @@ import (
 	"math"
 	"math/rand"
 	"sort"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -322,6 +323,59 @@ func (x Vector) RelDiff() Vector {
 		}
 		return d
 	}
+}
+
+// Unique returns a vector with only the unique values
+func (x Vector) Unique() Vector {
+	y := make(Vector, 0)
+	found := make(map[string]bool)
+	for _, v := range x {
+		vS := strconv.FormatFloat(v, 'f', 4, 64)
+		if !found[vS] {
+			found[vS] = true
+			y = append(y, v)
+		}
+	}
+	return y
+}
+
+// Subtract returns a vector with the difference between x and some y Vector
+func (x Vector) Subtract(y Vector) (Vector, error) {
+	n := len(x)
+	if n != len(y) {
+		return nil, fmt.Errorf("GoVector length mismatch in Subtract; len(x) = %v, len(y) = %v", len(x), len(y))
+	}
+
+	sub := make(Vector, n)
+	for i := 0; i < n; i++ {
+		sub[i] = x[i] - y[i]
+	}
+	return sub, nil
+}
+
+// SubtractConst returns a vector with the differencs between all the values of x and a constant e
+func (x Vector) SubtractConst(e float64) Vector {
+	n := len(x)
+	y := make(Vector, n)
+	for i := 0; i < n; i++ {
+		y[i] = x[i] - e
+	}
+	return y
+}
+
+// Round returns a vector with all values rounded to a specified precision (decimal places)
+func (x Vector) Round(precision uint) Vector {
+	n := len(x)
+	y := make(Vector, n)
+	round := func(v float64, p uint) float64 {
+		ratio := math.Pow(10, float64(p))
+		return math.Round(v*ratio) / ratio
+	}
+
+	for i := 0; i < n; i++ {
+		y[i] = round(x[i], precision)
+	}
+	return y
 }
 
 // Sample returns a sample of n elements of the original input vector.
